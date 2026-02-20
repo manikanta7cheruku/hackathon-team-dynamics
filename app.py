@@ -530,7 +530,7 @@ elif page == "Data Analysis":
     )
 
     if os.path.exists('eda_plots.png'):
-        st.image('eda_plots.png', use_container_width=True)
+        st.image('eda_plots.png')
 
         # Explanation of each plot
         st.markdown("""
@@ -644,7 +644,7 @@ elif page == "Model Performance":
     # Comparison chart
     comparison_path = os.path.join(RESULTS_DIR, 'model_performance_comparison.png')
     if os.path.exists(comparison_path):
-        st.image(comparison_path, use_container_width=True)
+        st.image(comparison_path)
 
     # Confusion Matrices
     st.markdown(
@@ -670,7 +670,7 @@ elif page == "Model Performance":
                 # Clean up filename for display
                 display_name = f.replace('_confusion_matrix.png', '').replace('_', ' ').title()
                 st.markdown(f"**{display_name}**")
-                st.image(os.path.join(RESULTS_DIR, f), use_container_width=True)
+                st.image(os.path.join(RESULTS_DIR, f))
 
     # ROC Curves
     roc_files = sorted([f for f in os.listdir(RESULTS_DIR) if 'roc_curve' in f])
@@ -696,7 +696,7 @@ elif page == "Model Performance":
             with cols[idx % 2]:
                 display_name = f.replace('_roc_curve.png', '').replace('_', ' ').title()
                 st.markdown(f"**{display_name}**")
-                st.image(os.path.join(RESULTS_DIR, f), use_container_width=True)
+                st.image(os.path.join(RESULTS_DIR, f))
 
     # ---- Regression Section ----
     st.markdown("---")
@@ -745,7 +745,7 @@ elif page == "Model Performance":
             with cols[idx % 2]:
                 display_name = f.replace('_actual_vs_predicted.png', '').replace('_', ' ').replace(' - ', ': ').title()
                 st.markdown(f"**{display_name}**")
-                st.image(os.path.join(RESULTS_DIR, f), use_container_width=True)
+                st.image(os.path.join(RESULTS_DIR, f))
 
 
 # ===============================================
