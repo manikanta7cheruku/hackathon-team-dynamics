@@ -234,14 +234,22 @@ def load_models():
 def preprocess_input(input_data, scaler, feature_encoder):
     """Preprocess user input for prediction."""
     df = pd.DataFrame([input_data])
+    
+    # Encode mentor_guidance FIRST (before selecting numeric cols)
     df['mentor_guidance'] = feature_encoder.transform(
         df['mentor_guidance'].astype(str)
     )
+    
+    # Now ALL columns are numeric, select them
     numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns
     
-    # Convert to numpy array to avoid feature name issues
-    df[numeric_cols] = scaler.transform(df[numeric_cols].values)
-    return df
+    # Scale using numpy array (no feature names)
+    scaled_values = scaler.transform(df[numeric_cols].values)
+    
+    # Put scaled values back into DataFrame with same column names
+    df_scaled = pd.DataFrame(scaled_values, columns=numeric_cols)
+    
+    return df_scaled
 
 
 # -----------------------------------------------
