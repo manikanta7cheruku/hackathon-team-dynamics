@@ -11,6 +11,8 @@ import numpy as np
 import joblib
 import os
 
+st.set_option('deprecation.showfileUploaderEncoding', False)
+
 # -----------------------------------------------
 # CONFIGURATION
 # -----------------------------------------------

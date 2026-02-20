@@ -6,3 +6,5 @@ seaborn==0.13.2
 joblib
 openpyxl
 streamlit
+
+pip freeze > requirements.txt
