@@ -238,7 +238,9 @@ def preprocess_input(input_data, scaler, feature_encoder):
         df['mentor_guidance'].astype(str)
     )
     numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns
-    df[numeric_cols] = scaler.transform(df[numeric_cols])
+    
+    # Convert to numpy array to avoid feature name issues
+    df[numeric_cols] = scaler.transform(df[numeric_cols].values)
     return df
 
 
