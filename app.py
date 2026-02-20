@@ -233,23 +233,38 @@ def load_models():
 
 def preprocess_input(input_data, scaler, feature_encoder):
     """Preprocess user input for prediction."""
-    df = pd.DataFrame([input_data])
     
-    # Encode mentor_guidance FIRST (before selecting numeric cols)
-    df['mentor_guidance'] = feature_encoder.transform(
-        df['mentor_guidance'].astype(str)
-    )
+    # Step 1: Encode mentor_guidance (Yes/No → 1/0)
+    mentor_encoded = feature_encoder.transform([input_data['mentor_guidance']])[0]
     
-    # Now ALL columns are numeric, select them
-    numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns
+    # Step 2: Create DataFrame with ONLY the 6 features the scaler expects
+    df_for_scaling = pd.DataFrame([{
+        'team_size': input_data['team_size'],
+        'skill_diversity_score': input_data['skill_diversity_score'],
+        'experience_level_avg': input_data['experience_level_avg'],
+        'conflict_count': input_data['conflict_count'],
+        'communication_rating': input_data['communication_rating'],
+        'hours_spent': input_data['hours_spent']
+    }])
     
-    # Scale using numpy array (no feature names)
-    scaled_values = scaler.transform(df[numeric_cols].values)
+    # Step 3: Scale only these 6 features
+    scaled_values = scaler.transform(df_for_scaling)
     
-    # Put scaled values back into DataFrame with same column names
-    df_scaled = pd.DataFrame(scaled_values, columns=numeric_cols)
+    # Step 4: Create final DataFrame with ALL 7 features
+    # First 6 columns are scaled values, last column is encoded (not scaled) mentor_guidance
+    df_final = pd.DataFrame(scaled_values, columns=[
+        'team_size', 
+        'skill_diversity_score', 
+        'experience_level_avg',
+        'conflict_count', 
+        'communication_rating', 
+        'hours_spent'
+    ])
     
-    return df_scaled
+    # Add mentor_guidance as the 7th column (encoded but not scaled)
+    df_final['mentor_guidance'] = mentor_encoded
+    
+    return df_final
 
 
 # -----------------------------------------------
